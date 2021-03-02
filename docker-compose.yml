@@ -1,0 +1,67 @@
+version: "3.3"
+services:
+
+  db:
+    image: mysql:8.0
+    volumes:
+      - app-db-data:/var/lib/mysql
+    restart: always
+    ports:
+      - 33061:3306
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      
+
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    build:
+      context: .
+      dockerfile: backend.dockerfile
+      args:
+        INSTALL_DEV: ${INSTALL_DEV-false}
+    ports:
+      - 8000:80
+    volumes:
+      - ./App:/usr/src/App/App
+    env_file:
+      - .env
+    environment:
+      - SERVER_NAME=${DOMAIN?Variable not set}
+      - SERVER_HOST=https://${DOMAIN?Variable not set}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    depends_on:
+      - db
+    command: ["uvicorn", "App.main:app", "--host", "0.0.0.0", "--port", "80"]
+
+  
+  # queue:
+  #   image: rabbitmq:3-management
+
+  # celeryworker:
+  #   image: '${DOCKER_IMAGE_CELERYWORKER?Variable not set}:${TAG-latest}'
+  #   depends_on:
+  #     - db
+  #     - queue
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - SERVER_NAME=${DOMAIN?Variable not set}
+  #     - SERVER_HOST=https://${DOMAIN?Variable not set}
+  #   build:
+  #     context: .
+  #     dockerfile: celeryworker.dockerfile
+  #     args:
+  #       INSTALL_DEV: ${INSTALL_DEV-false}
+  
+volumes:
+  app-db-data:
