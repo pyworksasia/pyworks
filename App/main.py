@@ -193,4 +193,4 @@ async def read_home(request: Request):
             "name": "App"
         },
     }
-    return 'Welcome!'
+    return 'It works!'
