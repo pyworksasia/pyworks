@@ -12,6 +12,7 @@ from App.Http.requests import UserCreateRequest
 from App.Http.middleware import ROUTES_MIDDLEWARE
 
 from App.Api.admin import admin_api_router
+from App.Api.v1 import api_router
 
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -20,7 +21,10 @@ from fastapi.templating import Jinja2Templates
 
 app = FastAPI(title=settings.APP_NAME, openapi_url="{0}/openapi.json".format(settings.API_ADMIN_PREFIX), middleware=ROUTES_MIDDLEWARE)
 
-# Admin API 
+# Register client API: /*
+app.include_router(api_router)
+
+# Register Admin API: /admin/* 
 app.include_router(admin_api_router, prefix=settings.API_ADMIN_PREFIX)
 
 
