@@ -75,15 +75,15 @@ class LanguagueMiddleware(BaseHTTPMiddleware):
         
 ROUTES_MIDDLEWARE = [
     # Middleware(HTTPSRedirectMiddleware),
-    Middleware(AddProcessTimeHeaderMiddleware),
-    Middleware(LanguagueMiddleware),
+    # Middleware(AddProcessTimeHeaderMiddleware),
+    # Middleware(LanguagueMiddleware),
     # Middleware(GZipMiddleware, minimum_size=1000),
-    Middleware(CORSMiddleware, 
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    ),
+    # Middleware(CORSMiddleware, 
+    #     allow_origins=origins,
+    #     allow_credentials=True,
+    #     allow_methods=["*"],
+    #     allow_headers=["*"],
+    # ),
     # Middleware(TrustedHostMiddleware, allowed_hosts=trusted_hosts),
     # Middleware(AuthenticationMiddleware, backend=BasicAuthBackend())
         
